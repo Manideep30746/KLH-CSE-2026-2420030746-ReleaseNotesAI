@@ -1,0 +1,27 @@
+
+services:
+  backend:
+    build:
+      context: ./src/backend
+      dockerfile: Dockerfile
+    image: releasenotesai-backend:latest
+    container_name: releasenotesai-backend
+    env_file:
+      - ./src/backend/.env
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:8000
+    image: releasenotesai-frontend:latest
+    container_name: releasenotesai-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
